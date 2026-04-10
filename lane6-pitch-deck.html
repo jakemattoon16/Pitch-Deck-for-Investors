@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lane6 Pitch Deck</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body, #root { width: 100%; height: 100%; background: #050608; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const ACCENT = "#C8A96E";
+    const ACCENT_DIM = "rgba(200,169,110,0.15)";
+    const BG = "#0A0C10";
+    const PANEL = "#0F1318";
+    const BORDER = "rgba(200,169,110,0.2)";
+
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+        const s = document.createElement("script");
+        s.src = src; s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    function Shell({ num, label, children }) {
+      return (
+        <div style={{ width:"100%", height:"100%", background:BG, display:"flex", flexDirection:"column", position:"relative", overflow:"hidden", fontFamily:"'DM Sans',sans-serif" }}>
+          <div style={{ position:"absolute", inset:0, pointerEvents:"none", backgroundImage:`linear-gradient(rgba(200,169,110,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,169,110,0.03) 1px,transparent 1px)`, backgroundSize:"60px 60px" }} />
+          <div style={{ position:"absolute", top:0, left:0, width:3, height:"100%", background:`linear-gradient(to bottom,${ACCENT},transparent 60%)` }} />
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"20px 40px 0", position:"relative", zIndex:2 }}>
+            <span style={{ fontFamily:"'Syne',sans-serif", fontSize:11, letterSpacing:"0.25em", color:ACCENT, textTransform:"uppercase", fontWeight:700 }}>LANE6</span>
+            <span style={{ fontSize:11, letterSpacing:"0.2em", color:"rgba(255,255,255,0.25)", textTransform:"uppercase" }}>{String(num).padStart(2,"0")} — {label}</span>
+          </div>
+          <div style={{ flex:1, display:"flex", flexDirection:"column", position:"relative", zIndex:2 }}>{children}</div>
+          <div style={{ height:1, margin:"0 40px 20px", background:`linear-gradient(to right,${ACCENT},transparent)` }} />
+        </div>
+      );
+    }
+
+    function Pill({ t }) {
+      return <span style={{ background:ACCENT_DIM, border:`1px solid ${BORDER}`, borderRadius:2, padding:"3px 10px", fontSize:11, letterSpacing:"0.12em", color:ACCENT, textTransform:"uppercase" }}>{t}</span>;
+    }
+
+    function Stat({ v, l }) {
+      return (
+        <div style={{ background:PANEL, border:`1px solid ${BORDER}`, padding:"20px 24px", flex:1 }}>
+          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:32, fontWeight:700, color:ACCENT, lineHeight:1 }}>{v}</div>
+          <div style={{ fontSize:12, color:"rgba(255,255,255,0.45)", marginTop:6, lineHeight:1.4 }}>{l}</div>
+        </div>
+      );
+    }
+
+    const SLIDES = [
+      () => (
+        <Shell num={1} label="Overview">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:16 }}><Pill t="Confidential — 2025" /></div>
+            <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:64, fontWeight:800, lineHeight:1, color:"#fff", margin:"0 0 8px", letterSpacing:"-0.02em" }}>LANE<span style={{ color:ACCENT }}>6</span></h1>
+            <div style={{ width:60, height:3, background:`linear-gradient(to right,${ACCENT},transparent)`, marginBottom:24 }} />
+            <p style={{ fontSize:22, color:"rgba(255,255,255,0.75)", maxWidth:540, lineHeight:1.4, margin:"0 0 48px", fontWeight:300 }}>The AI-powered backend operations layer built exclusively for registered investment advisors.</p>
+            <div style={{ display:"flex", gap:16 }}>
+              {["Jake — CEO","Tucker — COO"].map(p => <div key={p} style={{ padding:"10px 20px", border:`1px solid ${BORDER}`, background:PANEL, fontSize:13, color:"rgba(255,255,255,0.5)" }}>{p}</div>)}
+            </div>
+          </div>
+          <div style={{ position:"absolute", right:0, top:"50%", transform:"translateY(-50%)", width:"35%", height:"70%", background:"radial-gradient(ellipse at right,rgba(200,169,110,0.08) 0%,transparent 70%)", pointerEvents:"none" }} />
+        </Shell>
+      ),
+      () => (
+        <Shell num={2} label="Problem">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:20 }}><Pill t="The Problem" /></div>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:38, fontWeight:700, color:"#fff", margin:"0 0 32px", lineHeight:1.1, letterSpacing:"-0.02em", maxWidth:580 }}>RIAs are running <span style={{ color:ACCENT }}>$250M+ portfolios</span> on spreadsheets and manual workflows.</h2>
+            <div style={{ display:"flex", flexDirection:"column", gap:14, maxWidth:620 }}>
+              {[
+                { tag:"Operations", text:"Client onboarding takes 2–3 weeks. Mostly manual, largely email-based." },
+                { tag:"Technology", text:"Most firms run 4–6 disconnected tools with no automation layer between them." },
+                { tag:"Capacity", text:"Advisors spend 30–40% of their week on admin that has nothing to do with advising." },
+                { tag:"Scale", text:"To grow AUM, they hire more staff. There is no infrastructure alternative." },
+              ].map(r => (
+                <div key={r.tag} style={{ display:"flex", alignItems:"flex-start", gap:16, padding:"14px 18px", background:PANEL, border:`1px solid ${BORDER}` }}>
+                  <span style={{ fontSize:10, letterSpacing:"0.15em", color:ACCENT, textTransform:"uppercase", fontWeight:700, minWidth:90, paddingTop:2 }}>{r.tag}</span>
+                  <span style={{ fontSize:14, color:"rgba(255,255,255,0.65)", lineHeight:1.5 }}>{r.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Shell>
+      ),
+      () => (
+        <Shell num={3} label="Insight">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:20 }}><Pill t="The Shift" /></div>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:38, fontWeight:700, color:"#fff", margin:"0 0 24px", lineHeight:1.15, letterSpacing:"-0.02em", maxWidth:620 }}>AI hasn't changed how RIAs operate. <span style={{ color:ACCENT }}>It's about to.</span></h2>
+            <p style={{ fontSize:16, color:"rgba(255,255,255,0.55)", maxWidth:580, lineHeight:1.7, margin:"0 0 36px" }}>Enterprise firms have teams of engineers to build this infrastructure. Mid-market RIAs don't. They are the last segment of finance where the gap between what's possible and what's deployed is still massive. That gap is Lane6's market.</p>
+            <div style={{ display:"flex", gap:12, padding:"20px 24px", background:PANEL, border:`1px solid ${BORDER}`, maxWidth:580 }}>
+              <div style={{ fontSize:28, color:ACCENT, lineHeight:1 }}>→</div>
+              <p style={{ fontSize:14, color:"rgba(255,255,255,0.7)", lineHeight:1.6, margin:0 }}>The firm that wins this segment won't be a SaaS tool. It'll be the one that goes in, builds the system, and runs it. That's the product.</p>
+            </div>
+          </div>
+        </Shell>
+      ),
+      () => (
+        <Shell num={4} label="Solution">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:20 }}><Pill t="What We Do" /></div>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:38, fontWeight:700, color:"#fff", margin:"0 0 12px", lineHeight:1.15, letterSpacing:"-0.02em", maxWidth:560 }}>Lane6 is your operations infrastructure. Not a tool. Not a consultant.</h2>
+            <p style={{ fontSize:15, color:"rgba(255,255,255,0.5)", maxWidth:540, lineHeight:1.6, margin:"0 0 32px" }}>We embed into RIA firms as a backend system operator — building, automating, and maintaining the operational layer so advisors can focus on clients and AUM growth.</p>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, maxWidth:680 }}>
+              {[
+                { icon:"⚙", title:"CRM Architecture", desc:"Custom GoHighLevel builds tailored to each firm's workflow and compliance requirements." },
+                { icon:"⚡", title:"Workflow Automation", desc:"Onboarding, reporting, and follow-up sequences automated end-to-end." },
+                { icon:"🔗", title:"System Integration", desc:"Connects the tools already in place into a coherent, automated stack." },
+              ].map(c => (
+                <div key={c.title} style={{ background:PANEL, border:`1px solid ${BORDER}`, padding:"20px 18px" }}>
+                  <div style={{ fontSize:22, marginBottom:10 }}>{c.icon}</div>
+                  <div style={{ fontFamily:"'Syne',sans-serif", fontSize:13, fontWeight:700, color:ACCENT, marginBottom:8 }}>{c.title}</div>
+                  <div style={{ fontSize:12, color:"rgba(255,255,255,0.45)", lineHeight:1.5 }}>{c.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Shell>
+      ),
+      () => (
+        <Shell num={5} label="Why Now">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:20 }}><Pill t="Timing" /></div>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:38, fontWeight:700, color:"#fff", margin:"0 0 32px", lineHeight:1.15, letterSpacing:"-0.02em", maxWidth:560 }}>Three forces are converging <span style={{ color:ACCENT }}>right now.</span></h2>
+            <div style={{ display:"flex", flexDirection:"column", gap:14, maxWidth:620 }}>
+              {[
+                { num:"01", title:"AI tooling matured", text:"LLMs, automation platforms, and API infrastructure are now enterprise-grade and affordable. The build cost that was $500k two years ago is under $15k today." },
+                { num:"02", title:"Compliance pressure is rising", text:"SEC oversight of RIAs has intensified. Firms need documented, auditable workflows. Manual ops won't hold up under scrutiny." },
+                { num:"03", title:"AUM consolidation favors operators", text:"Larger IBDs and RIA aggregators are buying independent firms. To compete, they need institutional-grade infrastructure without the headcount." },
+              ].map(r => (
+                <div key={r.num} style={{ display:"flex", gap:20, padding:"16px 18px", background:PANEL, border:`1px solid ${BORDER}` }}>
+                  <div style={{ fontFamily:"'Syne',sans-serif", fontSize:22, fontWeight:800, color:ACCENT, opacity:0.4, minWidth:30, lineHeight:1 }}>{r.num}</div>
+                  <div>
+                    <div style={{ fontSize:13, fontWeight:600, color:"#fff", marginBottom:4 }}>{r.title}</div>
+                    <div style={{ fontSize:12, color:"rgba(255,255,255,0.45)", lineHeight:1.5 }}>{r.text}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Shell>
+      ),
+      () => (
+        <Shell num={6} label="Market">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:20 }}><Pill t="Market Size" /></div>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:38, fontWeight:700, color:"#fff", margin:"0 0 32px", lineHeight:1.15, letterSpacing:"-0.02em", maxWidth:560 }}>15,000 firms. <span style={{ color:ACCENT }}>Almost none of them automated.</span></h2>
+            <div style={{ display:"flex", gap:12, marginBottom:20 }}>
+              <Stat v="~15,400" l="RIAs in the $50M–$500M AUM range (SEC IAPD)" />
+              <Stat v="$840M+" l="Serviceable market at avg. $4.5k/mo per firm" />
+              <Stat v="$4.5M" l="ARR target at 150 clients by Year 3" />
+            </div>
+            <div style={{ padding:"16px 20px", background:PANEL, border:`1px solid ${BORDER}`, maxWidth:680 }}>
+              <div style={{ fontSize:10, letterSpacing:"0.15em", color:ACCENT, textTransform:"uppercase", marginBottom:6 }}>Bottom-Up Logic</div>
+              <div style={{ fontSize:12, color:"rgba(255,255,255,0.5)", lineHeight:1.6 }}>150 clients × $2,500/mo retainer × 12 months = $4.5M ARR. Plus $5k setup fees per new client. Achievable with 2 AEs and proven outreach infrastructure already in place.</div>
+            </div>
+          </div>
+        </Shell>
+      ),
+      () => (
+        <Shell num={7} label="Product">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:20 }}><Pill t="How It Works" /></div>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:38, fontWeight:700, color:"#fff", margin:"0 0 32px", lineHeight:1.15, letterSpacing:"-0.02em", maxWidth:560 }}>We build it. We run it. <span style={{ color:ACCENT }}>They grow.</span></h2>
+            <div style={{ display:"flex", maxWidth:680 }}>
+              {[
+                { phase:"Phase 1", name:"Systems Audit", when:"Wk 1–2", desc:"Map existing tools, workflows, and bottlenecks. Identify the 3 highest-ROI automation targets." },
+                { phase:"Phase 2", name:"Infrastructure Build", when:"Wk 3–6", desc:"Build CRM architecture, automations, and integrations. Full implementation, not a demo." },
+                { phase:"Phase 3", name:"Live Operations", when:"Monthly", desc:"Ongoing management, optimization, and expansion. We run it. They never touch it." },
+              ].map((p, i) => (
+                <div key={p.phase} style={{ flex:1, padding:"20px 18px", background: i===2 ? `linear-gradient(135deg,rgba(200,169,110,0.1),${PANEL})` : PANEL, border:`1px solid ${BORDER}`, borderLeft: i>0?"none":`1px solid ${BORDER}` }}>
+                  <div style={{ fontSize:10, letterSpacing:"0.2em", color:ACCENT, textTransform:"uppercase", marginBottom:4 }}>{p.phase}</div>
+                  <div style={{ fontFamily:"'Syne',sans-serif", fontSize:14, fontWeight:700, color:"#fff", marginBottom:4 }}>{p.name}</div>
+                  <div style={{ fontSize:11, color:"rgba(255,255,255,0.3)", marginBottom:12 }}>{p.when}</div>
+                  <div style={{ fontSize:12, color:"rgba(255,255,255,0.5)", lineHeight:1.5 }}>{p.desc}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop:14, fontSize:12, color:"rgba(255,255,255,0.3)", maxWidth:580, lineHeight:1.5 }}>Built on GoHighLevel with custom AI layers. White-labeled infrastructure with full audit trail for SEC compliance.</div>
+          </div>
+        </Shell>
+      ),
+      () => (
+        <Shell num={8} label="Business Model">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:20 }}><Pill t="Revenue Model" /></div>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:38, fontWeight:700, color:"#fff", margin:"0 0 32px", lineHeight:1.15, letterSpacing:"-0.02em", maxWidth:560 }}>Two-part pricing. <span style={{ color:ACCENT }}>High retention by design.</span></h2>
+            <div style={{ display:"flex", gap:12, marginBottom:20, maxWidth:680 }}>
+              <div style={{ flex:1, background:PANEL, border:`1px solid ${BORDER}`, padding:"24px 22px" }}>
+                <div style={{ fontSize:10, letterSpacing:"0.2em", color:ACCENT, textTransform:"uppercase", marginBottom:12 }}>Setup Fee</div>
+                <div style={{ fontFamily:"'Syne',sans-serif", fontSize:36, fontWeight:800, color:"#fff" }}>$5,000</div>
+                <div style={{ fontSize:12, color:"rgba(255,255,255,0.4)", marginTop:8, lineHeight:1.5 }}>One-time build fee. Covers audit, full infrastructure build, and onboarding. Collected before work begins.</div>
+              </div>
+              <div style={{ flex:1, background:`linear-gradient(135deg,rgba(200,169,110,0.12),${PANEL})`, border:`1px solid ${ACCENT}`, padding:"24px 22px" }}>
+                <div style={{ fontSize:10, letterSpacing:"0.2em", color:ACCENT, textTransform:"uppercase", marginBottom:12 }}>Monthly Retainer</div>
+                <div style={{ fontFamily:"'Syne',sans-serif", fontSize:36, fontWeight:800, color:ACCENT }}>$2,500+</div>
+                <div style={{ fontSize:12, color:"rgba(255,255,255,0.4)", marginTop:8, lineHeight:1.5 }}>Recurring operations management. Scales with firm size. Average 24-month retention window.</div>
+              </div>
+            </div>
+            <div style={{ display:"flex", gap:12, maxWidth:680 }}>
+              <Stat v="$60k" l="Average LTV (24-mo. retention)" />
+              <Stat v="~$1,200" l="Estimated CAC via cold outreach" />
+              <Stat v="50:1" l="LTV to CAC ratio" />
+            </div>
+          </div>
+        </Shell>
+      ),
+      () => (
+        <Shell num={9} label="Traction">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:20 }}><Pill t="Early Traction" /></div>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:38, fontWeight:700, color:"#fff", margin:"0 0 32px", lineHeight:1.15, letterSpacing:"-0.02em", maxWidth:560 }}>Infrastructure is live. <span style={{ color:ACCENT }}>Pipeline is building.</span></h2>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, maxWidth:680 }}>
+              {[
+                { label:"CRM & Automation", text:"Full GoHighLevel infrastructure built and deployed. Proven across real enterprise client engagements." },
+                { label:"Lead Database", text:"SEC IAPD scraper live. 15,400+ qualified RIA leads filtered by AUM band, state, and firm size." },
+                { label:"Outbound Infrastructure", text:"Cold email and LinkedIn outreach sequences built and actively running." },
+                { label:"Vertical Lock", text:"100% of new business development pointed at the RIA vertical. No distraction." },
+                { label:"Legal Infrastructure", text:"MSA, SOW templates, and Scheduled Services Agreement finalized. Florida LLC incorporated." },
+                { label:"Proven Model", text:"Past client engagements validated delivery capability. Closing first RIA-specific contracts now." },
+              ].map(r => (
+                <div key={r.label} style={{ background:PANEL, border:`1px solid ${BORDER}`, padding:"16px 18px", display:"flex", gap:10 }}>
+                  <div style={{ color:ACCENT, fontSize:14, paddingTop:1 }}>✓</div>
+                  <div>
+                    <div style={{ fontSize:12, fontWeight:600, color:"#fff", marginBottom:3 }}>{r.label}</div>
+                    <div style={{ fontSize:11, color:"rgba(255,255,255,0.4)", lineHeight:1.4 }}>{r.text}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Shell>
+      ),
+      () => (
+        <Shell num={10} label="Team">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:20 }}><Pill t="Founders" /></div>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:38, fontWeight:700, color:"#fff", margin:"0 0 32px", lineHeight:1.15, letterSpacing:"-0.02em", maxWidth:560 }}>Operators first. <span style={{ color:ACCENT }}>Builders by necessity.</span></h2>
+            <div style={{ display:"flex", gap:16, maxWidth:680 }}>
+              {[
+                { name:"Jake", role:"CEO — Strategy & Sales", bullets:["Multi-business operator across AI, services, and real estate","Licensed real estate agent active in WNY commercial and residential","Anthropic Claude Code certified","Built and closed enterprise CRM engagements from scratch","Designed Lane6's outbound infrastructure and RIA go-to-market"] },
+                { name:"Tucker Haluszczak", role:"COO — Operations", bullets:["Co-founder, directly responsible for delivery and operations","Manages client onboarding and ongoing account management","Systems implementation and workflow execution lead"] },
+              ].map(p => (
+                <div key={p.name} style={{ flex:1, background:PANEL, border:`1px solid ${BORDER}`, padding:"24px 22px" }}>
+                  <div style={{ fontFamily:"'Syne',sans-serif", fontSize:20, fontWeight:700, color:"#fff", marginBottom:4 }}>{p.name}</div>
+                  <div style={{ fontSize:11, color:ACCENT, marginBottom:16, letterSpacing:"0.05em" }}>{p.role}</div>
+                  <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                    {p.bullets.map(b => (
+                      <div key={b} style={{ display:"flex", gap:10, alignItems:"flex-start" }}>
+                        <span style={{ color:ACCENT, fontSize:10, paddingTop:3 }}>▸</span>
+                        <span style={{ fontSize:12, color:"rgba(255,255,255,0.5)", lineHeight:1.4 }}>{b}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Shell>
+      ),
+      () => (
+        <Shell num={11} label="The Ask">
+          <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"0 40px 0 56px" }}>
+            <div style={{ marginBottom:20 }}><Pill t="Investment Ask" /></div>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:38, fontWeight:700, color:"#fff", margin:"0 0 12px", lineHeight:1.15, letterSpacing:"-0.02em", maxWidth:560 }}>Raising <span style={{ color:ACCENT }}>$350K</span> to close our first 20 RIA clients.</h2>
+            <p style={{ fontSize:14, color:"rgba(255,255,255,0.45)", maxWidth:560, lineHeight:1.6, margin:"0 0 28px" }}>Pre-seed round. Use of funds split across three buckets with a 14-month runway to first revenue milestones.</p>
+            <div style={{ display:"flex", gap:12, marginBottom:20, maxWidth:680 }}>
+              {[
+                { label:"Sales & Outreach", pct:"45%", amt:"$157K", desc:"AE hire, LinkedIn Recruiter, outbound tooling, data stack" },
+                { label:"Product & Build", pct:"30%", amt:"$105K", desc:"GHL infrastructure, AI tooling, delivery capacity" },
+                { label:"Operations & Legal", pct:"25%", amt:"$88K", desc:"Compliance, contractor ops, founder runway" },
+              ].map(r => (
+                <div key={r.label} style={{ flex:1, background:PANEL, border:`1px solid ${BORDER}`, padding:"18px 16px" }}>
+                  <div style={{ fontFamily:"'Syne',sans-serif", fontSize:22, fontWeight:800, color:ACCENT }}>{r.pct}</div>
+                  <div style={{ fontSize:12, fontWeight:600, color:"#fff", margin:"4px 0 6px" }}>{r.label}</div>
+                  <div style={{ fontSize:11, color:"rgba(255,255,255,0.35)", lineHeight:1.4 }}>{r.amt} — {r.desc}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ padding:"16px 20px", background:`linear-gradient(135deg,rgba(200,169,110,0.08),${PANEL})`, border:`1px solid ${ACCENT}`, maxWidth:680, display:"flex", gap:20, alignItems:"center" }}>
+              <div style={{ fontSize:10, letterSpacing:"0.2em", color:ACCENT, textTransform:"uppercase", minWidth:80 }}>Milestone</div>
+              <div style={{ fontSize:13, color:"rgba(255,255,255,0.65)", lineHeight:1.5 }}>20 RIA clients at $2,500/mo = $600K ARR. Breakeven at 12 clients. This raise gets us there and sets up the Series A conversation.</div>
+            </div>
+          </div>
+        </Shell>
+      ),
+    ];
+
+    function PitchDeck() {
+      const [cur, setCur] = useState(0);
+      const [vis, setVis] = useState(true);
+      const [exporting, setExporting] = useState(false);
+      const [pct, setPct] = useState(0);
+
+      const goTo = (idx) => {
+        if (idx < 0 || idx >= SLIDES.length) return;
+        setVis(false);
+        setTimeout(() => { setCur(idx); setVis(true); }, 160);
+      };
+
+      useEffect(() => {
+        const fn = (e) => {
+          if (e.key === "ArrowRight" || e.key === "ArrowDown") goTo(cur + 1);
+          if (e.key === "ArrowLeft"  || e.key === "ArrowUp")   goTo(cur - 1);
+        };
+        window.addEventListener("keydown", fn);
+        return () => window.removeEventListener("keydown", fn);
+      }, [cur]);
+
+      const exportPDF = async () => {
+        setExporting(true); setPct(0);
+        try {
+          await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+          await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF({ orientation:"landscape", unit:"px", format:[960,540] });
+
+          const wrap = document.createElement("div");
+          wrap.style.cssText = "position:fixed;left:-9999px;top:0;width:960px;height:540px;overflow:hidden;";
+          document.body.appendChild(wrap);
+
+          const style = document.createElement("style");
+          style.textContent = "@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');";
+          wrap.appendChild(style);
+
+          for (let i = 0; i < SLIDES.length; i++) {
+            setPct(Math.round((i / SLIDES.length) * 90));
+            const node = document.createElement("div");
+            node.style.cssText = "width:960px;height:540px;";
+            wrap.appendChild(node);
+            const root = ReactDOM.createRoot(node);
+            root.render(React.createElement(SLIDES[i]));
+            await new Promise(r => setTimeout(r, 500));
+
+            const canvas = await window.html2canvas(node, {
+              backgroundColor: BG, scale:2, useCORS:true, logging:false,
+              width:960, height:540,
+            });
+            root.unmount();
+            node.remove();
+
+            if (i > 0) pdf.addPage([960,540],"landscape");
+            pdf.addImage(canvas.toDataURL("image/jpeg",0.92), "JPEG", 0, 0, 960, 540);
+          }
+
+          document.body.removeChild(wrap);
+          setPct(100);
+          pdf.save("Lane6-Pitch-Deck.pdf");
+        } catch(err) {
+          console.error(err);
+          alert("Export failed — check console for details.");
+        }
+        setExporting(false); setPct(0);
+      };
+
+      const Slide = SLIDES[cur];
+
+      return (
+        <>
+          <div style={{ width:"100vw", height:"100vh", background:"#050608", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
+            <div style={{ width:"min(960px,95vw)", aspectRatio:"16/9", position:"relative", opacity: vis ? 1 : 0, transition:"opacity 0.16s ease", boxShadow:"0 40px 120px rgba(0,0,0,0.8),0 0 0 1px rgba(200,169,110,0.1)" }}>
+              <Slide />
+            </div>
+
+            <div style={{ display:"flex", alignItems:"center", gap:20, marginTop:18 }}>
+              <button onClick={() => goTo(cur-1)} disabled={cur===0} style={{ background:"none", border:`1px solid ${cur===0?"rgba(255,255,255,0.08)":BORDER}`, color:cur===0?"rgba(255,255,255,0.18)":ACCENT, width:34, height:34, cursor:cur===0?"default":"pointer", fontSize:15, display:"flex", alignItems:"center", justifyContent:"center" }}>←</button>
+
+              <div style={{ display:"flex", gap:5 }}>
+                {SLIDES.map((_,i) => (
+                  <div key={i} onClick={() => goTo(i)} style={{ width:i===cur?20:6, height:6, background:i===cur?ACCENT:"rgba(255,255,255,0.14)", borderRadius:3, cursor:"pointer", transition:"all 0.3s" }} />
+                ))}
+              </div>
+
+              <button onClick={() => goTo(cur+1)} disabled={cur===SLIDES.length-1} style={{ background:"none", border:`1px solid ${cur===SLIDES.length-1?"rgba(255,255,255,0.08)":BORDER}`, color:cur===SLIDES.length-1?"rgba(255,255,255,0.18)":ACCENT, width:34, height:34, cursor:cur===SLIDES.length-1?"default":"pointer", fontSize:15, display:"flex", alignItems:"center", justifyContent:"center" }}>→</button>
+            </div>
+
+            <div style={{ marginTop:10, display:"flex", alignItems:"center", gap:24 }}>
+              <span style={{ fontSize:11, color:"rgba(255,255,255,0.14)", letterSpacing:"0.15em" }}>
+                {String(cur+1).padStart(2,"0")} / {String(SLIDES.length).padStart(2,"0")} — ARROW KEYS TO NAVIGATE
+              </span>
+
+              <button onClick={exportPDF} disabled={exporting} style={{
+                background: exporting ? "rgba(200,169,110,0.07)" : ACCENT_DIM,
+                border:`1px solid ${BORDER}`,
+                color: exporting ? "rgba(200,169,110,0.4)" : ACCENT,
+                padding:"6px 18px", fontSize:11, letterSpacing:"0.15em", textTransform:"uppercase",
+                cursor: exporting ? "default" : "pointer",
+                fontFamily:"'Syne',sans-serif", fontWeight:700,
+                display:"flex", alignItems:"center", gap:8,
+              }}>
+                {exporting
+                  ? <><span style={{ width:10, height:10, border:`2px solid ${ACCENT}`, borderTopColor:"transparent", borderRadius:"50%", display:"inline-block", animation:"spin 0.7s linear infinite" }} /> Exporting {pct}%</>
+                  : "↓ Save as PDF"
+                }
+              </button>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<PitchDeck />);
+  </script>
+</body>
+</html>
